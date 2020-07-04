@@ -11,4 +11,6 @@ interface UserRepository {
     suspend fun fetchUserProfile(): Response<LoggedInUser>
 
     suspend fun uploadProfilePhoto(encodedImage: String): Response<String>
+
+    fun getGravatarUrl(email: String?) : String?
 }

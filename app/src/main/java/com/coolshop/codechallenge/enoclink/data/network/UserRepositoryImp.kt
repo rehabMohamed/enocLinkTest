@@ -6,10 +6,10 @@ import com.coolshop.codechallenge.enoclink.data.UserManager
 import com.coolshop.codechallenge.enoclink.data.network.model.AvatarRequest
 import com.coolshop.codechallenge.enoclink.data.network.model.LoginRequest
 import com.coolshop.codechallenge.enoclink.data.network.model.Response
-import com.coolshop.codechallenge.enoclink.utils.getGravatarUrl
+import com.coolshop.codechallenge.enoclink.utils.md5
 import javax.inject.Inject
 
-class NetworkUserRepository @Inject constructor(
+class UserRepositoryImp @Inject constructor(
         private val enocLinkApi: EnocLinkApi,
         private val userManager: UserManager
 ) : UserRepository {
@@ -45,6 +45,13 @@ class NetworkUserRepository @Inject constructor(
             Response.Success(response.avatarUrl)
         } catch (e: Throwable) {
             Response.Error(e)
+        }
+    }
+
+    override fun getGravatarUrl(email: String?) : String? {
+        return email?.let {
+            val hash = it.md5()
+            "http://www.gravatar.com/avatar/$hash?s=100&d=404"
         }
     }
 }

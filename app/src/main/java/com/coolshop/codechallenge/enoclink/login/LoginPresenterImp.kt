@@ -3,18 +3,23 @@ package com.coolshop.codechallenge.enoclink.login
 import com.coolshop.codechallenge.enoclink.base.presenter.BasePresenterImp
 import com.coolshop.codechallenge.enoclink.data.UserRepository
 import com.coolshop.codechallenge.enoclink.data.network.model.Response
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class LoginPresenterImp<V: LoginView> @Inject constructor(override val userRepository: UserRepository)
     : BasePresenterImp<V>(userRepository), LoginPresenter<V> {
 
-    var emailValid = false
-    var passwordValid = false
+    private var emailValid = false
+    private var passwordValid = false
 
     override fun login(email: String, password: String) {
         launch(coroutineContext) {
-            when(userRepository.login(email, password)) {
+            val response = withContext(Dispatchers.IO){
+                userRepository.login(email, password)
+            }
+            when(response) {
                 is Response.Success<String> -> view?.openProfileScreen()
                 is Response.Error ->  view?.showLoginFailed()
             }
@@ -22,23 +27,23 @@ class LoginPresenterImp<V: LoginView> @Inject constructor(override val userRepos
     }
 
     override fun emailChanged(email: String) {
-        if (email.isEmailValid()) {
+        emailValid = if (email.isEmailValid()) {
             view?.hideInvalidEmail()
-            emailValid = true
+            true
         } else {
             view?.showInvalidEmail()
-            emailValid = false
+            false
         }
         loginDataChanged()
     }
 
     override fun passwordChanged(password: String) {
-        if (password.isPasswordValid()) {
+        passwordValid = if (password.isPasswordValid()) {
             view?.hideInvalidPassword()
-            passwordValid = true
+            true
         } else {
             view?.showInvalidPassword()
-            passwordValid = false
+            false
         }
         loginDataChanged()
     }

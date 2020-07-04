@@ -9,7 +9,7 @@ import com.coolshop.codechallenge.enoclink.R
 import com.coolshop.codechallenge.enoclink.base.view.BaseActivity
 import com.coolshop.codechallenge.enoclink.data.LoggedInUser
 import com.coolshop.codechallenge.enoclink.profile.di.ProfileModule
-import com.coolshop.codechallenge.enoclink.utils.loadImage
+import com.coolshop.codechallenge.enoclink.utils.load
 import com.github.dhaval2404.imagepicker.ImagePicker
 import kotlinx.android.synthetic.main.activity_profile.*
 import javax.inject.Inject
@@ -50,7 +50,7 @@ class ProfileActivity : BaseActivity(), ProfileView {
                 val image = BitmapFactory.decodeFile(it)
                 // apply grayscale filter
                 val grayScaleImage = presenter.applyGrayScaleFilter(image)
-                loadImage(this, grayScaleImage, avatar)
+                avatar.load(this, grayScaleImage)
                 presenter.uploadAvatar(grayScaleImage)
             }
         }
@@ -64,7 +64,7 @@ class ProfileActivity : BaseActivity(), ProfileView {
         user?.let {
             email.text = it.email
             password.text = it.password
-            loadImage(this, it.avatarUrl, avatar, R.drawable.profile)
+            avatar.load(this, it.avatarUrl, R.drawable.profile)
         }
     }
 
@@ -87,6 +87,6 @@ class ProfileActivity : BaseActivity(), ProfileView {
 
     companion object {
         // 1024 * 3/4 base64 encoding represents each 3 bits in 4 chars
-        private val MAX_AVATAR_SIZE = 768
+        private const val MAX_AVATAR_SIZE = 768
     }
 }

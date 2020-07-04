@@ -7,7 +7,9 @@ import com.coolshop.codechallenge.enoclink.data.UserRepository
 import com.coolshop.codechallenge.enoclink.data.network.model.Response
 import com.coolshop.codechallenge.enoclink.utils.applyGrayScaleFilter
 import com.coolshop.codechallenge.enoclink.utils.encodeImage
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class ProfilePresenterImp<V: ProfileView> @Inject constructor(override val userRepository: UserRepository)
@@ -15,7 +17,10 @@ class ProfilePresenterImp<V: ProfileView> @Inject constructor(override val userR
 
     override fun getUserProfile() {
         launch(coroutineContext) {
-            when(val response = userRepository.fetchUserProfile()) {
+            val response = withContext(Dispatchers.IO){
+                userRepository.fetchUserProfile()
+            }
+            when(response) {
                 is Response.Success<LoggedInUser> -> view?.updateProfile(response.data)
                 is Response.Error ->  view?.showError(response.throwable.message)
             }
@@ -26,7 +31,10 @@ class ProfilePresenterImp<V: ProfileView> @Inject constructor(override val userR
         val encodedImage = bitmap.encodeImage()
 
         launch(coroutineContext) {
-            when(userRepository.uploadProfilePhoto(encodedImage)) {
+            val response = withContext(Dispatchers.IO) {
+                userRepository.uploadProfilePhoto(encodedImage)
+            }
+            when(response) {
                 is Response.Success<String> -> view?.showAvatarUpdated()
                 is Response.Error ->  view?.showAvatarUploadFailed()
             }

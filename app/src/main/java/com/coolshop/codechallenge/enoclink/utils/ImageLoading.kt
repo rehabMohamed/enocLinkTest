@@ -6,26 +6,16 @@ import android.widget.ImageView
 import androidx.annotation.DrawableRes
 import com.bumptech.glide.Glide
 
-fun loadImage(context: Context, url: String?, imageView: ImageView) {
-    Glide.with(context)
-            .load(url)
-            .into(imageView)
-}
 
-fun loadImage(context: Context, bitmap: Bitmap, imageView: ImageView) {
+fun ImageView.load(context: Context, bitmap: Bitmap) {
     Glide.with(context)
             .load(bitmap)
-            .into(imageView)
+            .into(this)
 }
 
-fun loadImage(context: Context, url: String?, imageView: ImageView, @DrawableRes placeholder: Int) {
+fun ImageView.load(context: Context, url: String?, @DrawableRes placeholder: Int) {
     Glide.with(context)
             .load(url)
             .placeholder(placeholder)
-            .into(imageView)
-}
-
-fun getGravatarUrl(email: String) : String {
-    val hash = email.md5()
-    return "http://www.gravatar.com/avatar/$hash?s=100&d=404"
+            .into(this)
 }

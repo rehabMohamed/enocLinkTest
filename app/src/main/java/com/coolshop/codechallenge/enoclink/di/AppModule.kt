@@ -7,7 +7,7 @@ import com.coolshop.codechallenge.enoclink.BuildConfig
 import com.coolshop.codechallenge.enoclink.data.UserRepository
 import com.coolshop.codechallenge.enoclink.data.UserManager
 import com.coolshop.codechallenge.enoclink.data.network.EnocLinkApi
-import com.coolshop.codechallenge.enoclink.data.network.NetworkUserRepository
+import com.coolshop.codechallenge.enoclink.data.network.UserRepositoryImp
 import com.coolshop.codechallenge.enoclink.data.network.mocking.MockInterceptor
 import com.google.gson.Gson
 import dagger.Module
@@ -30,12 +30,12 @@ class AppModule(private val appContext: Context) {
     @Provides
     @Singleton
     fun provideSharedPreferences(): SharedPreferences =
-            PreferenceManager.getDefaultSharedPreferences(appContext)
+            appContext.getSharedPreferences("ENOC_LINK_CHALLENGE", Context.MODE_PRIVATE);
 
     @Provides
     @Singleton
     fun provideNetworkDataSource(enocLinkApi: EnocLinkApi, userManager: UserManager): UserRepository =
-            NetworkUserRepository(enocLinkApi, userManager)
+            UserRepositoryImp(enocLinkApi, userManager)
 
     @Provides
     @Singleton

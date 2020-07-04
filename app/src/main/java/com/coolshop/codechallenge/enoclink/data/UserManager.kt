@@ -16,7 +16,7 @@ class UserManager(private val sharedPrefs: SharedPreferences, private val gson: 
 
 
     fun updateUser(userId: String, apiToken: String, email: String, password: String) {
-        // app shouldn't store password locally, saving only for the purpose of displaying the password for the test!
+        // app shouldn't store password locally, saving only for the purpose of displaying the password for this code challenge!
         this.loggedInUser = LoggedInUser(userId = userId, apiToken = apiToken, email = email, password = password)
 
         sharedPrefs.edit().putString(USER_KEY, gson.toJson(loggedInUser)).apply()
